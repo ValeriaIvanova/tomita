@@ -1,10 +1,16 @@
+import nltk
 from nltk.stem.wordnet import WordNetLemmatizer
 from nltk.corpus import twitter_samples, stopwords
 from nltk.tag import pos_tag
 from nltk.tokenize import word_tokenize
 from nltk import FreqDist, classify, NaiveBayesClassifier
 
+from nltk.tag import pos_tag
+from pymystem3 import Mystem
+from nltk.corpus import stopwords
+
 import re, string, random
+
 
 def remove_noise(tweet_tokens, stop_words = ()):
 
@@ -45,7 +51,8 @@ if __name__ == "__main__":
     text = twitter_samples.strings('tweets.20150430-223406.json')
     tweet_tokens = twitter_samples.tokenized('positive_tweets.json')[0]
 
-    stop_words = stopwords.words('english')
+    #stop_words = stopwords.words('english')
+    stop_words = stopwords.words('russian')
 
     positive_tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
     negative_tweet_tokens = twitter_samples.tokenized('negative_tweets.json')
@@ -86,8 +93,18 @@ if __name__ == "__main__":
 
     print(classifier.show_most_informative_features(10))
 
-    custom_tweet = "I ordered just once from TerribleCo, they screwed up, never used the app again."
+    custom_tweets = ["Мне сегодня было очень грустно из-за погоды.",
+"Сегодня было солнечно и радостно на душе.",
+"Я уволился с работы так как очень мало платили.",
+"Быть программистом - это тяжелый труд, но круто.",
+"Попугай немного приболел и я отвезла его к ветеринару.",
+"Дальше будет только лучше, я уверен.",
+"Такого дня больше уже точно не будет.",
+"Тайлор сказал, что хотел бы закрыть лето в банку и зимой открывать и радоваться.",
+"Папа был чем-то явно расстроен, но я не стал его трогать.",
+"Моя кошка радуется корму каждый раз как в последний."]
 
+for custom_tweet in custom_tweets:
     custom_tokens = remove_noise(word_tokenize(custom_tweet))
 
     print(custom_tweet, classifier.classify(dict([token, True] for token in custom_tokens)))
